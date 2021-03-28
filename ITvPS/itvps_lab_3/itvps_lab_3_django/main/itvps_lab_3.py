@@ -48,7 +48,11 @@ def add_to_csv(file_name, csv_file):
         a_pen.writerow(values)
 
 
-add_to_csv("/Users/daana/Projects/SEMESTR_6/ITvPS/itvps_lab_3/news/news02.txt",
-           "/Users/daana/Projects/SEMESTR_6/ITvPS/itvps_lab_3/itvps_lab_3_db")
+# while True:
+#     print("Введите название файла")
+#     file = input()
+#     add_to_csv("/Users/daana/Projects/SEMESTR_6/ITvPS/itvps_lab_3/news/"+file,
+#                "/Users/daana/Projects/SEMESTR_6/ITvPS/itvps_lab_3/itvps_lab_3_db")
 
 # команды для создания django project: django-admin startproject itvps_lab_3_django(название проекта)
+# news01.txt
