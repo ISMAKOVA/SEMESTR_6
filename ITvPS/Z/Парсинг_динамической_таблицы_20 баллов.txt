@@ -1,0 +1,3 @@
+Спарсить и сохранить в датафрейм таблицу:
+https://soccer365.ru/competitions/13/players/
+
