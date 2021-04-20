@@ -5,7 +5,8 @@ driver = webdriver.Chrome()
 driver.get("https://soccer365.ru/competitions/13/players/")
 
 table = driver.find_element_by_xpath('//table[@id="players_all"]')
-data = [[td.text.replace('\n', '') for td in tr.find_elements_by_xpath('td') if len(tr.find_elements_by_xpath('td'))==14]
+data = [[td.text.replace('\n', '') for td in tr.find_elements_by_xpath('td')
+         if len(tr.find_elements_by_xpath('td')) == 14]
         for tr in table.find_elements_by_xpath('//tr')]
 
 
