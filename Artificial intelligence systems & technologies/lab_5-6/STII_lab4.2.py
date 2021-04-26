@@ -1,6 +1,3 @@
-import re
-from pyprover import *
-import nltk.data
 import pandas as pd
 import re
 from pyprover import *
@@ -147,7 +144,7 @@ def create_node_string(node):
         return (f'{n1}{node["symf"]}')
 
 
-def remove_d(nodes):
+def removeDubl(nodes):
     forDel = []
     for nodeSr in nodes:
         for ao in nodes:
@@ -161,53 +158,10 @@ def remove_d(nodes):
     return nodes
 
 
-def get_boolean_data_of(sym):
+def getBooleanDataOf(sym):
     for key in blocks:
         if blocks[key][0] == sym:
             return blocks[key][1]
-
-# dK =int(input())
-
-# def printer(dK):
-#     global nodes
-#     global blocks
-#     global last_index
-#     last_index = 0
-#     nodes = []
-#     blocks = {}
-#     print('----------------------Начало-----------------------------')
-#     df = removeDubl(split_text(statements_conclusions['P'][dK]))
-#     print(df)
-#     co = set_hypothesis(statements_conclusions['Z'][dK])
-#     for b in blocks:
-#         print(b, blocks[b])
-#     print(colored('------------Гипотеза----------------', 'cyan'))
-#     print(co)
-#     print(colored('-----------Утверждения--------------', 'green'))
-#     resultStr = ''
-#     for c in df:
-#         if c == co:
-#             continue
-#         if ('absolute' in c.keys() or len(c['nodeStr']) > 2) and 'n' in c.keys() and len(c['txt']) > 0:
-#             print(c)
-#             resultStr += c['nodeStr'] + " & "
-#     resultStr = resultStr.strip(" & ")
-#     print(colored('------------Что-имеем---------------', 'magenta'))
-#     print(resultStr)
-#     print(simplify(expr(resultStr)))
-#     print(colored('----------Что-доказать--------------', 'magenta'))
-#     print(expr(co['nodeStr']))
-#     print(simplify(expr(co['nodeStr'])))
-#     result = str(proves(simplify(expr(resultStr)), simplify(expr(co['nodeStr']))))
-#     if result == 'True':
-#         print("Заключение: " + colored(result, 'green'))
-#     else:
-#         print("Заключение: " + colored(result, 'red'))
-#     print('----------------------Конец------------------------------')
-#
-#
-# for i in range(0, len(statements_conclusions['P'])):
-#     printer(i)
 
 
 def get_result(statement, conclusion):
@@ -217,7 +171,8 @@ def get_result(statement, conclusion):
     last_index = 0
     nodes = []
     blocks = {}
-    reformat_statement = remove_d(split_text(statement))
+    print('----------------------Начало-----------------------------')
+    reformat_statement = removeDubl(split_text(statement))
     hypothesis = set_hypothesis(conclusion)
     for b in blocks:
         print(b, blocks[b])
@@ -230,10 +185,10 @@ def get_result(statement, conclusion):
             print(c)
             result_str += c['nodeStr'] + " & "
     result_str = result_str.strip(" & ")
-    print(colored('------------Что-имеем---------------', 'cyan'))
+    print(colored('------------Что-имеем---------------', 'magenta'))
     print(result_str)
     print(simplify(expr(result_str)))
-    print(colored('----------Что-доказать--------------', 'cyan'))
+    print(colored('----------Что-доказать--------------', 'magenta'))
     print(expr(hypothesis['nodeStr']))
     print(simplify(expr(hypothesis['nodeStr'])))
     result = str(proves(simplify(expr(result_str)), simplify(expr(hypothesis['nodeStr']))))
@@ -250,50 +205,92 @@ def get_result(statement, conclusion):
                    "Результат": result}
     return result_dict
 
+# dK =int(input())
 
-# def text_refactor(text):
-#     alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K']
-#     sentences = list(filter(None, re.split("(?<!\d)[.](?!\d)", text.lower())))
-#     # работает только для примеров в формате: то либо бюджет секвестируется, либо правительство уходит в отставку.
-#     found_groups = [re.findall(r'\sто либо (.*), либо\s(.*)\.', i+".") for i in sentences]
-#     replace_part = " ".join([i[0][0]+" or "+i[0][1] for i in found_groups if i])
-#     sub = [re.sub(r'\sлибо (.*), либо\s(.*)\.', " "+replace_part, i+".") for i in sentences]
-#     print(sub)
-#     replace_words = [i.replace('если', 'if').replace(' то ', ' then ') for i in sub]
-#     print(replace_words)
-#     splited_by_delimiters = [list(filter(None, re.split(r'if|then|or|,|\.', i))) for i in replace_words]
-#
-#     result = {}
-#     i = 0
-#     for sentence in splited_by_delimiters:
-#         for part in sentence:
-#             new_part = part.strip()
-#             if new_part not in result and new_part != '':
-#                 result[new_part] = alphabet[i]
-#                 i += 1
-#     print(result)
-# # просплитить все предложниея по словам if then , .
-#     # а потом присвоить значения этим выражениям и вставить обратно в конструкцию
-#     return ""
-#
-#
-# def reform(text):
-#     alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K']
-#     regex_expressions = {
-#         "if": [r"(?:если([\w\sА-яЁё,]+), то([\w\sА-яЁё,]+))", '->'],
-#         'or': [r"(?:либо|или|)(?:([\w\sА-яЁё,]+)(?: или|\, либо)([\w\sА-яЁё,]+))", '|'],
-#         'and': [r"(?:([\w\sА-яЁё,]+) и ([\w\sА-яЁё,]+))", '&'],
-#     }
-#     sentences = list(filter(None, re.split("(?<!\d)[.](?!\d)", text.lower())))
-#     statements = {}
-#     for sentence in sentences:
-#         for regex in regex_expressions:
-#             matches = re.findall(regex_expressions[regex][0], sentence)
-#             if len(matches) > 0 and len(matches[0]) > 1:
-#                 print("1: " + matches[0][0])
-#                 print("2: " + matches[0][1])
-#                 if matches[0][0] not in statements.values():
-#                     statements[alphabet.pop(0)] = matches[0][0]
-#                 if matches[0][1] not in statements.values():
-#                     statements[alphabet.pop(0)] = matches[0][1]
-#     print(statements)
+def printer(dK):
+    global nodes
+    global blocks
+    global last_index
+    last_index = 0
+    nodes = []
+    blocks = {}
+    print('----------------------Начало-----------------------------')
+    df = removeDubl(split_text(statements_conclusions['P'][dK]))
+    print(df)
+    co = set_hypothesis(statements_conclusions['Z'][dK])
+    for b in blocks:
+        print(b, blocks[b])
+    print(colored('------------Гипотеза----------------', 'cyan'))
+    print(co)
+    print(colored('-----------Утверждения--------------', 'green'))
+    resultStr = ''
+    for c in df:
+        if c == co:
+            continue
+        if ('absolute' in c.keys() or len(c['nodeStr']) > 2) and 'n' in c.keys() and len(c['txt']) > 0:
+            print(c)
+            resultStr += c['nodeStr'] + " & "
+    resultStr = resultStr.strip(" & ")
+    print(colored('------------Что-имеем---------------', 'magenta'))
+    print(resultStr)
+    print(simplify(expr(resultStr)))
+    print(colored('----------Что-доказать--------------', 'magenta'))
+    print(expr(co['nodeStr']))
+    print(simplify(expr(co['nodeStr'])))
+    result = str(proves(simplify(expr(resultStr)), simplify(expr(co['nodeStr']))))
+    if result == 'True':
+        print("Заключение: " + colored(result, 'green'))
+    else:
+        print("Заключение: " + colored(result, 'red'))
+    print('----------------------Конец------------------------------')
+
+
+for i in range(0, len(statements_conclusions['P'])):
+    printer(i)
+
+
+# print('---------------------')
+# print(stacking(parseP(prefs['P'][1])))
+
+
+def get_result(statement, conclusion):
+    global nodes
+    global blocks
+    global last_index
+    last_index = 0
+    nodes = []
+    blocks = {}
+    print('----------------------Начало-----------------------------')
+    reformat_statement = removeDubl(split_text(statement))
+    printer(reformat_statement)
+    hypothesis = set_hypothesis(conclusion)
+    for b in blocks:
+        print(b, blocks[b])
+    print(colored('-----------Утверждения--------------', 'green'))
+    result_str = ''
+    for c in reformat_statement:
+        if c == hypothesis:
+            continue
+        if ('absolute' in c.keys() or len(c['nodeStr']) > 2) and 'n' in c.keys() and len(c['txt']) > 0:
+            print(c)
+            result_str += c['nodeStr'] + " & "
+    result_str = result_str.strip(" & ")
+    print(colored('------------Что-имеем---------------', 'magenta'))
+    print(result_str)
+    print(simplify(expr(result_str)))
+    print(colored('----------Что-доказать--------------', 'magenta'))
+    print(expr(hypothesis['nodeStr']))
+    print(simplify(expr(hypothesis['nodeStr'])))
+    result = str(proves(simplify(expr(result_str)), simplify(expr(hypothesis['nodeStr']))))
+
+    if result == 'True':
+        print("Заключение: " + colored(result, 'green'))
+    else:
+        print("Заключение: " + colored(result, 'red'))
+    print('----------------------Конец------------------------------')
+
+    result_dict = {"Утверждение": result_str, "Упрощенное утверждение": simplify(expr(result_str)),
+                   "Гипотеза": expr(hypothesis['nodeStr']),
+                   "Упрощенная гипотеза": simplify(expr(hypothesis['nodeStr'])),
+                   "Результат": result}
+    return result_dict
