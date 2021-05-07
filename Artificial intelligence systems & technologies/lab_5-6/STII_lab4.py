@@ -6,7 +6,7 @@ import re
 from pyprover import *
 from termcolor import colored
 
-# data = [{str:'', needOnEnd:bool, res: [0-false;1-true;2-mayBe], func: def func(me, nextObj), innerNode:[obj, obj], nextObj:obj},{}]
+
 statements_conclusions = {
     "P": ['Если идет дождь, то нежарко. Если светит солнце, то жарко. Идет дождь.',
           'Экзамен сдан вовремя или сессия продлена. Если сессия ' +
@@ -166,48 +166,6 @@ def get_boolean_data_of(sym):
         if blocks[key][0] == sym:
             return blocks[key][1]
 
-# dK =int(input())
-
-# def printer(dK):
-#     global nodes
-#     global blocks
-#     global last_index
-#     last_index = 0
-#     nodes = []
-#     blocks = {}
-#     print('----------------------Начало-----------------------------')
-#     df = removeDubl(split_text(statements_conclusions['P'][dK]))
-#     print(df)
-#     co = set_hypothesis(statements_conclusions['Z'][dK])
-#     for b in blocks:
-#         print(b, blocks[b])
-#     print(colored('------------Гипотеза----------------', 'cyan'))
-#     print(co)
-#     print(colored('-----------Утверждения--------------', 'green'))
-#     resultStr = ''
-#     for c in df:
-#         if c == co:
-#             continue
-#         if ('absolute' in c.keys() or len(c['nodeStr']) > 2) and 'n' in c.keys() and len(c['txt']) > 0:
-#             print(c)
-#             resultStr += c['nodeStr'] + " & "
-#     resultStr = resultStr.strip(" & ")
-#     print(colored('------------Что-имеем---------------', 'magenta'))
-#     print(resultStr)
-#     print(simplify(expr(resultStr)))
-#     print(colored('----------Что-доказать--------------', 'magenta'))
-#     print(expr(co['nodeStr']))
-#     print(simplify(expr(co['nodeStr'])))
-#     result = str(proves(simplify(expr(resultStr)), simplify(expr(co['nodeStr']))))
-#     if result == 'True':
-#         print("Заключение: " + colored(result, 'green'))
-#     else:
-#         print("Заключение: " + colored(result, 'red'))
-#     print('----------------------Конец------------------------------')
-#
-#
-# for i in range(0, len(statements_conclusions['P'])):
-#     printer(i)
 
 
 def get_result(statement, conclusion):
@@ -297,3 +255,49 @@ def get_result(statement, conclusion):
 #                 if matches[0][1] not in statements.values():
 #                     statements[alphabet.pop(0)] = matches[0][1]
 #     print(statements)
+
+
+
+
+# dK =int(input())
+
+# def printer(dK):
+#     global nodes
+#     global blocks
+#     global last_index
+#     last_index = 0
+#     nodes = []
+#     blocks = {}
+#     print('----------------------Начало-----------------------------')
+#     df = removeDubl(split_text(statements_conclusions['P'][dK]))
+#     print(df)
+#     co = set_hypothesis(statements_conclusions['Z'][dK])
+#     for b in blocks:
+#         print(b, blocks[b])
+#     print(colored('------------Гипотеза----------------', 'cyan'))
+#     print(co)
+#     print(colored('-----------Утверждения--------------', 'green'))
+#     resultStr = ''
+#     for c in df:
+#         if c == co:
+#             continue
+#         if ('absolute' in c.keys() or len(c['nodeStr']) > 2) and 'n' in c.keys() and len(c['txt']) > 0:
+#             print(c)
+#             resultStr += c['nodeStr'] + " & "
+#     resultStr = resultStr.strip(" & ")
+#     print(colored('------------Что-имеем---------------', 'magenta'))
+#     print(resultStr)
+#     print(simplify(expr(resultStr)))
+#     print(colored('----------Что-доказать--------------', 'magenta'))
+#     print(expr(co['nodeStr']))
+#     print(simplify(expr(co['nodeStr'])))
+#     result = str(proves(simplify(expr(resultStr)), simplify(expr(co['nodeStr']))))
+#     if result == 'True':
+#         print("Заключение: " + colored(result, 'green'))
+#     else:
+#         print("Заключение: " + colored(result, 'red'))
+#     print('----------------------Конец------------------------------')
+#
+#
+# for i in range(0, len(statements_conclusions['P'])):
+#     printer(i)
