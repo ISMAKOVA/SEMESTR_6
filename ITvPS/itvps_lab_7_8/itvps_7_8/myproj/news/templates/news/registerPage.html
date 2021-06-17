@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <title>Регистрация</title>
+</head>
+<body>
+<div class="d-flex align-items-center justify-content-center " style="height: 700px">
+    <div class="">
+        <div class="card" style="height: auto; width: 400px;">
+            <div class="card-header bg-primary text-white text-center">
+                Регистрация
+            </div>
+            <div class="card-body">
+
+                <form class="panel-body" method="POST">
+                     {% csrf_token %}
+                    <div class="input-group justify-content-between py-1">
+            <span class="input-group-text">
+              <i class="">Имя пользователя</i>
+            </span>
+                        {{form.username}}
+                    </div>
+                    <div class="input-group justify-content-between py-1">
+            <span class="input-group-text">
+              <i class="fa fa-lock">Почта</i>
+            </span>
+                        {{form.email}}
+                    </div>
+                    <div class="input-group justify-content-between py-1">
+            <span class="input-group-text">
+              <i class="fa fa-lock">Пароль</i>
+            </span>
+                        {{form.password1}}
+                    </div>
+                    <div class="input-group justify-content-between py-1">
+            <span class="input-group-text">
+              <i class="fa fa-lock">Повторите пароль</i>
+            </span>
+                        {{form.password2}}
+                    </div>
+                    <div class="text-center">
+                    <input type="submit" class=" btn btn-primary " name="Зарегистрироваться">
+                        </div>
+
+                    <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a> </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
