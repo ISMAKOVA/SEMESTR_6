@@ -4,8 +4,20 @@ from django.contrib import messages
 from django.views.generic.edit import CreateView
 from .forms import ArticleForm, RubricForm, HashtagForm, CreateUserForm
 from django.contrib.auth.forms import UserCreationForm
-
+import pandas as pd
 from django.contrib.auth import authenticate, login, logout
+from .classifier import *
+import re
+import numpy as np
+from nltk.corpus import stopwords
+from string import punctuation
+from nltk.tokenize import word_tokenize
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.naive_bayes import BernoulliNB
+from nltk.stem.snowball import SnowballStemmer
+import pickle
 
 
 def registerPage(request):
@@ -35,6 +47,7 @@ def loginPage(request):
     context = {}
     return render(request, 'news/loginPage.html', context)
 
+
 def logoutUser(request):
     logout(request)
     return redirect('login')
@@ -48,6 +61,13 @@ def article(request):
 def index(request):
     articles = Article.objects.all()
     rubrics = Rubric.objects.all()
+    pre_df = []
+    for article in articles:
+        pre_df.append([article.annotation, article.rubric.id])
+    columns = ['text', 'class']
+    df = pd.DataFrame(pre_df, columns=columns)
+    print(df)
+    training_data(df)
     return render(request, 'news/index.html', context={'articles': articles, 'rubrics': rubrics})
 
 
@@ -72,14 +92,25 @@ def get_one_article(request, article_id):
 
 def createArticle(request):
     form = ArticleForm
+    result = ''
     if request.method == 'POST':
         articleForm = ArticleForm(request.POST)
         if articleForm.is_valid():
             articleForm.save()
-            messages.success(request, "Форма отправлена")
-            return redirect('/news/index/')
+            text = classifier([articleForm.cleaned_data.get("annotation")])
+            print('-------------------------------------------')
 
-    return render(request, 'news/createArticle.html', {'form': form})
+            for i, j in text:
+                print('%r => %s' % (i, Rubric.objects.get(pk=j)))
+                print("Number=", j)
+                result = Rubric.objects.get(pk=j)
+
+            print('-------------------------------------------')
+
+            messages.success(request, "Форма отправлена")
+            return render(request, 'news/createArticle.html', {'form': form, 'result': result})
+
+    return render(request, 'news/createArticle.html', {'form': form, 'result': result})
 
 
 def createRubric(request):
@@ -89,7 +120,7 @@ def createRubric(request):
         if rubricForm.is_valid():
             rubricForm.save()
             messages.success(request, "Форма отправлена")
-            return redirect('/news/index/')
+            return redirect('/news/')
 
     return render(request, 'news/createRubric.html', {'form': form})
 
@@ -101,6 +132,6 @@ def createHashtag(request):
         if hashtagForm.is_valid():
             hashtagForm.save()
             messages.success(request, "Форма отправлена")
-            return redirect('/news/index/')
+            return redirect('/news/')
 
     return render(request, 'news/createHashtag.html', {'form': form})
